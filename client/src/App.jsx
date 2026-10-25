@@ -12,20 +12,35 @@ export default function App() {
   const [error, setError] = useState(null);
 
   // Shared loader: clears the old question, runs the request, shows errors.
-  async function loadQuestion(request) {
-    setLoading(true);
-    setError(null);
-    setPicked(null);
-    setQuestion(null);
-    try {
-      const data = await request();
-      setQuestion(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+async function loadQuestion(request) {
+  if (loading) return;
+
+  setLoading(true);
+  setError(null);
+  setPicked(null);
+  setQuestion(null);
+
+  try {
+    const data = await request();
+    setQuestion(data);
+  } catch (err) {
+    const message = err.message || '';
+
+    if (
+      message.includes('429') ||
+      message.includes('too_many_requests') ||
+      message.toLowerCase().includes('rate limit')
+    ) {
+      setError(
+        'AI is receiving too many requests. Please try again in about 30 seconds.'
+      );
+    } else {
+      setError(message || 'Something went wrong. Please try again.');
     }
+  } finally {
+    setLoading(false);
   }
+}
 
   function askTopic(event) {
     event.preventDefault();
