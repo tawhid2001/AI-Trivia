@@ -1,4 +1,5 @@
 import express from "express";
+import { sendGeminiError } from "../geminiError.js";
 import { MODEL, ai } from "../gemini.js";
 
 const router = express.Router();
@@ -15,14 +16,18 @@ router.post("/", async (req, res) => {
     return res.status(400).json({ error: "A non-empty question is required." });
   }
 
-  const interaction = await ai.interactions.create({
-    model: MODEL,
-    input: question.trim(),
-    system_instruction: PROMPT,
-    generation_config: { temperature: 0.7 },
-  });
+  try {
+    const interaction = await ai.interactions.create({
+      model: MODEL,
+      input: question.trim(),
+      system_instruction: PROMPT,
+      generation_config: { temperature: 0.7 },
+    });
 
-  res.json({ hint: interaction.output_text });
+    return res.json({ hint: interaction.output_text });
+  } catch (error) {
+    return sendGeminiError(res, error);
+  }
 });
 
 export default router;

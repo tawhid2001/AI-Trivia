@@ -146,6 +146,19 @@ button:disabled {
   font-weight: 600;
 }
 
+.loading-status {
+  margin: 12px 0 16px;
+  padding: 12px 16px;
+  background: rgba(108, 99, 255, 0.18);
+  border: 1px solid var(--accent);
+  border-left: 5px solid var(--accent);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
 .fun-fact strong{
   color: var(--accent);
 }

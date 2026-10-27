@@ -1,4 +1,5 @@
 import express from "express";
+import { sendGeminiError } from "../geminiError.js";
 import { MODEL, ai } from "../gemini.js";
 
 const router = express.Router();
@@ -16,19 +17,23 @@ Topic: Space
 `;
 
 router.post("/", async (req, res) => {
-  const { topic } = req.body;
+  try {
+    const { topic } = req.body;
 
-  const interaction = await ai.interactions.create({
-    model: MODEL,
-    input: `Topic: ${topic}`,
-    system_instruction: PROMPT,
-    generation_config: { temperature: 0.9 },
-  });
+    const interaction = await ai.interactions.create({
+      model: MODEL,
+      input: `Topic: ${topic}`,
+      system_instruction: PROMPT,
+      generation_config: { temperature: 0.9 },
+    });
 
-  console.log(interaction.output_text);
+    console.log(interaction.output_text);
 
-  const quiz = JSON.parse(interaction.output_text);
-  res.json(quiz);
+    const quiz = JSON.parse(interaction.output_text);
+    return res.json(quiz);
+  } catch (error) {
+    return sendGeminiError(res, error);
+  }
 });
 
 export default router;

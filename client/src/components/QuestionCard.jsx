@@ -6,11 +6,14 @@ export default function QuestionCard({ data, picked, onPick }) {
   const { question, options, answer, funFact } = data;
   const [hint, setHint] = useState(null);
   const [hintLoading, setHintLoading] = useState(false);
+  const [hintTakingLong, setHintTakingLong] = useState(false);
   const [hintError, setHintError] = useState(null);
 
   async function getHint() {
     setHintLoading(true);
+    setHintTakingLong(false);
     setHintError(null);
+    const slowRequestTimer = setTimeout(() => setHintTakingLong(true), 10000);
 
     try {
       const result = await postJSON("/api/hint", { question });
@@ -18,6 +21,8 @@ export default function QuestionCard({ data, picked, onPick }) {
     } catch (error) {
       setHintError(error.message || "Unable to get a hint. Please try again.");
     } finally {
+      clearTimeout(slowRequestTimer);
+      setHintTakingLong(false);
       setHintLoading(false);
     }
   }
@@ -31,8 +36,19 @@ export default function QuestionCard({ data, picked, onPick }) {
         disabled={Boolean(picked) || hintLoading || Boolean(hint)}
         onClick={getHint}
       >
-        {hintLoading ? "Getting hint…" : hint ? "Hint shown" : "Hint"}
+        {hintLoading
+          ? hintTakingLong
+            ? "Still working…"
+            : "Getting hint…"
+          : hint
+            ? "Hint shown"
+            : "Hint"}
       </button>
+      {hintLoading && hintTakingLong && (
+        <p className="loading-status">
+          This is taking longer than usual. The AI service may be busy; please keep waiting.
+        </p>
+      )}
 
       <div className="options">
         {options.map((option) => {
