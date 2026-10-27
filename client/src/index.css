@@ -38,6 +38,11 @@ header h1 {
   font-size: 28px;
 }
 
+.scores {
+  display: flex;
+  gap: 8px;
+}
+
 .score {
   background: var(--card);
   border: 1px solid var(--line);
@@ -111,6 +116,10 @@ button:disabled {
   line-height: 1.4;
 }
 
+.hint-button {
+  margin-bottom: 12px;
+}
+
 .options {
   display: grid;
   gap: 10px;
@@ -135,6 +144,19 @@ button:disabled {
 .result {
   margin: 16px 0 0;
   font-weight: 600;
+}
+
+.fun-fact strong{
+  color: var(--accent);
+}
+
+.fun-fact {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: rgba(108, 99, 255, 0.12);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  line-height: 1.4;
 }
 
 .error {

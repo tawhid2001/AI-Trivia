@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
+import hintRoutes from './routes/hint.js';
 import questionRoutes from './routes/question.js';
 import photoRoutes from './routes/photo.js';
 
@@ -14,6 +15,7 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use('/api/question', questionRoutes);
+app.use('/api/hint', hintRoutes);
 app.use('/api/photo', photoRoutes);
 
 const port = process.env.PORT || 3001;
